@@ -1,0 +1,81 @@
+<html>
+<head>
+	<title>PC Phone</title>
+	
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="js/jquery-2.1.0.js"></script>
+	<script src="js/client.js"></script>
+
+	<style type="text/css">
+	
+	body {
+		margin: 0px;
+	}
+
+	div.status {
+		border: 1px solid #7f7f7f;
+		padding: 0px;
+		margin: 0px;
+		height: 28px;
+		font-size: 16px;
+		background-color: #efefef;
+		padding-left: 5px;
+		padding-right: 5px;
+		display: flex;
+		align-items: center;		
+	}
+
+	p.status {
+		margin: 0px;
+		padding: 0px;
+		margin-right: 40px;
+		float: left;
+	}
+
+	#connection {
+		float: left;
+		display: inline-block;
+		width: 24px;
+		height: 24px;
+		margin: 1px;
+		margin-right: 4px;
+		border: 1px solid white;
+	}
+
+	.connected {
+		background-color: #00df00;
+	}
+
+	.disconnected {
+		background-color: #ef0000;
+	}
+
+	div.status {
+		border: 1px solid black;
+	}
+
+	</style>
+</head>
+
+<body>
+	
+	<div id="head">
+		<div class="status">
+			<div id="connection" class="disconnected"></div>
+			<p class="status" style="font-size: 24; margin-left: 2px; margin-right: 8px">|</p>
+			
+			<p class="status">battery: <span id="battery"></span></p>
+			<p class="status">uptime: <span id="uptime"></span></p>
+		</div>
+	</div>
+	
+	<div id="contacts">
+		
+	</div>
+
+	<div id="content">
+		
+	</div>
+</body>
+
+</html>

@@ -2,7 +2,7 @@ var fs = require("fs"),
     http = require("http"),
     socketIO = require("socket.io"),
     hapi = require("hapi"),
-    port =  (process.argv[2]? +process.argv[2]:3000),
+    port =  (process.argv[2]? +process.argv[2]:8000),
     port2 = port + 5;
 
 var app = {
@@ -14,7 +14,7 @@ var app = {
 
 
 
-var hapiServer = new hapi.Server('localhost', port2);
+var hapiServer = new hapi.Server('0.0.0.0', port2);
 
 hapiServer.route({ method: '*', path: '/{p*}', handler: function(req, reply) {
     reply('not found').code(404);

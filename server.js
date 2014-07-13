@@ -2,11 +2,7 @@ var fs = require("fs"),
     http = require("http"),
     socketIO = require("socket.io"),
     hapi = require("hapi"),
-<<<<<<< HEAD
     port =  +process.argv[2]|8000,
-=======
-    port =  (process.argv[2]? +process.argv[2]:8000),
->>>>>>> 7d0fead5d1dcf155618f066aa34280d6d8ed07aa
     port2 = port + 5;
 
 var app = {

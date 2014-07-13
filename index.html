@@ -10,6 +10,7 @@
 	
 	body {
 		margin: 0px;
+
 	}
 
 	div.status {
@@ -54,6 +55,95 @@
 		border: 1px solid black;
 	}
 
+	#body {
+		margin: 0px;
+		height: calc(100% - 32px);
+		display: inline;
+	}
+
+	#contacts {
+		float: left;
+		width: 7em;
+		height: inherit;
+		border: 1px solid black;
+		border-top: 1px;
+	}
+
+	h4.contact {
+		background-color: white;
+		border-bottom: 1px solid gray;
+		height: 1em;
+		padding-left: 8px;
+		padding-right: 8px;
+		padding-top: .5em;
+		padding-bottom: .5em;
+		margin: 0px;
+	}
+
+	div.contact {
+		background-color: #e7e7e7;
+		border-bottom: 1px solid black;
+		height: 1em;
+		padding-left: 8px;
+		padding-right: 8px;
+		padding-top: .5em;
+		padding-bottom: .5em;
+	}
+
+	div.contact:hover {
+		background-color: white;
+	}
+
+	#conversation {
+		float: left;
+		border: 1px;
+		margin: 1px;
+		padding: 0px;
+		padding-top: 1em;
+		width: 25%;
+		height: 50%;
+		border-radius: 2px;
+	}
+
+	li.message {
+		list-style-type: none;
+		border: 1px solid black;
+		border-radius: 4px;
+		margin: 4px;
+		padding: 1px;
+	}
+
+	li.sent {
+		text-align: right;
+		background-color: blue;
+	}
+
+	li.received {
+		text-align: left;
+		background-color: yellow;
+	}
+
+	p.message {
+		margin: 0px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	h4.conversation {
+		background-color: white;
+		margin: 0px;
+		margin-left: 1em;
+		font-weight: normal;
+	}
+
+	textarea.conversation {
+		width: 100%;
+		max-width: 100%;
+		border-radius: 5px;
+		border: 1px solid black;
+		padding: 2px;
+	}
+
 	</style>
 </head>
 
@@ -68,14 +158,28 @@
 			<p class="status">uptime: <span id="uptime"></span></p>
 		</div>
 	</div>
-	
+
+<div id="body">
 	<div id="contacts">
-		
+		<h4 class="contact">Contacts: </h4>
 	</div>
+	<ul id="conversation">
+		<h4 class="conversation">Toni Hoover (661-802-8188)</h4>
+		<li class="message sent">
+			<p class="message">HI</p>
+		</li>
+		<li class="message received">
+			<p class="message">hi</p>
+		</li>
+		<li class="message sent">
+			<p class="message">HEY</p>
+		</li>
+		<li class="message received">
+			<p class="message">hey</p>
+		</li>
+		<textarea class="conversation"></textarea>
+	</ul>
+</div>
 
-	<div id="content">
-		
-	</div>
 </body>
-
 </html>

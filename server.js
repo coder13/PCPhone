@@ -2,7 +2,7 @@ var fs = require("fs"),
     http = require("http"),
     socketIO = require("socket.io"),
     hapi = require("hapi"),
-    port =  +process.argv[2]|8000,
+    port = +(process.argv[2]?process.argv[2]:8000),
     port2 = port + 5;
 
 var app = {
@@ -14,25 +14,28 @@ var app = {
 
 };
 
-
-
-var hapiServer = new hapi.Server('0.0.0.0', port2);
+var hapiServer = new hapi.Server(port2);
 
 hapiServer.route({ method: '*', path: '/{p*}', handler: function(req, reply) {
     reply('not found').code(404);
 }});
 
-hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply) {
-    message = JSON.parse(req.payload);
-    console.log("Messaged received from: ", message.from + " which says: " + message.content);
-    if (phone.contacts.indexOf(message.from) == -1) {
-        console.log("Contact " + message.from + " does not exist; adding.");
-        addContact(message.from);
-    }
-    phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
 
-    sendMessage(message);
-    reply(1);
+hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply) {
+	if (req.payload){
+	    message = JSON.parse(req.payload);
+	    console.log("Messaged received from: ", message.from + " which says: " + message.content);
+	    if (phone.contacts.indexOf(message.from) == -1) {
+	        console.log("Contact " + message.from + " does not exist; adding.");
+	        addContact(message.from);
+	    }
+	    phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
+	
+	    sendMessage(message);
+	    reply(1);
+	} else {
+		reply(0);
+	}
 }});
 
 hapiServer.route({ method: 'POST', path: '/battery', handler:function(req, reply) {

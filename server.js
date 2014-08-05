@@ -2,8 +2,9 @@ var fs = require("fs"),
     http = require("http"),
     socketIO = require("socket.io"),
     hapi = require("hapi"),
-    port = +(process.argv[2]?process.argv[2]:8000),
+    port = +(process.argv[2]?process.argv[2]:4000), 
     port2 = port + 5;
+
 
 var app = {
 
@@ -22,6 +23,7 @@ hapiServer.route({ method: '*', path: '/{p*}', handler: function(req, reply) {
 
 
 hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply) {
+<<<<<<< HEAD
 	if (req.payload){
         message = JSON.parse(req.payload);
         console.log("Messaged received from: ", message.from + " which says: " + message.content);
@@ -30,6 +32,19 @@ hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply
             addContact(message.from);
         }
         phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
+=======
+	console.log('--');
+    console.log(req.payload);
+
+    if (req.payload){
+	    message = JSON.parse(req.payload);
+	    console.log("Messaged received from: ", message.from + " which says: " + message.content);
+	    if (phone.contacts.indexOf(message.from) == -1) {
+	        console.log("Contact " + message.from + " does not exist; adding.");
+	        addContact(message.from);
+	    }
+	    phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
+>>>>>>> 04ba4310bccc0fd500f07d2095f69965dcc991fa
 	
         sendMessage(message);
         reply(1);
@@ -41,7 +56,7 @@ hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply
 hapiServer.route({ method: 'POST', path: '/battery', handler:function(req, reply) {
     if (req.payload) {
         phone.battery = req.payload;
-        console.log('BatteryLevel: ' + phone.battery);
+        console.log('[' + (new Date().toString()) + '] BatteryLevel: ' + phone.battery);
         update("battery");
     }
     reply(1);
@@ -50,13 +65,13 @@ hapiServer.route({ method: 'POST', path: '/battery', handler:function(req, reply
 hapiServer.route({ method: 'POST', path: '/uptime', handler:function(req, reply) {
     if (req.payload) {
         phone.uptime = +req.payload;
-        console.log('Uptime: ' + phone.uptime + " seconds");
+        console.log('[' + (new Date().toString()) + '] Uptime: ' + phone.uptime + " seconds");
         update("uptime");
     }
     reply(1);
 }});
 
-hapiServer.route({method: 'GET', path: '/messages', handler:function(req, reply) {
+hapiServer.route({method: 'GET', path: '/phone', handler:function(req, reply) {
     reply(JSON.stringify(phone));
 
 }});
@@ -82,7 +97,7 @@ var httpServer = http.createServer(function(req, res) {
             res.end(fs.readFileSync(__dirname + req.url));
         }
     } catch (e) {}
-}).listen(port, function() {
+}).listen(port, "0.0.0.0", function() {
     console.log("Listening at: http://localhost:" + port);
 });
 
@@ -101,7 +116,7 @@ function update(which) {
         socketServer.sockets.emit('init', JSON.stringify({phone: phone}));
     else {
         socketServer.sockets.emit('update', JSON.stringify({property:which, value:phone[which]}));
-        console.log('sending: ', which, phone[which]);
+        // console.log('sending: ', which, phone[which]);
     }
 }
 

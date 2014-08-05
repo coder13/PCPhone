@@ -23,16 +23,16 @@ hapiServer.route({ method: '*', path: '/{p*}', handler: function(req, reply) {
 
 hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply) {
 	if (req.payload){
-	    message = JSON.parse(req.payload);
-	    console.log("Messaged received from: ", message.from + " which says: " + message.content);
-	    if (phone.contacts.indexOf(message.from) == -1) {
-	        console.log("Contact " + message.from + " does not exist; adding.");
-	        addContact(message.from);
-	    }
-	    phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
+        message = JSON.parse(req.payload);
+        console.log("Messaged received from: ", message.from + " which says: " + message.content);
+        if (phone.contacts.indexOf(message.from) == -1) {
+            console.log("Contact " + message.from + " does not exist; adding.");
+            addContact(message.from);
+        }
+        phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
 	
-	    sendMessage(message);
-	    reply(1);
+        sendMessage(message);
+        reply(1);
 	} else {
 		reply(0);
 	}

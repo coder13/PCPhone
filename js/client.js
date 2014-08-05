@@ -37,23 +37,28 @@ $(document).ready(function() {
 	client.iosocket.on("message", function(data) {
 		data = JSON.parse(data);
 		phone.conversations[data.from].push({type:data.type|'received', content: data.content});
+		addContact(data.from);
 		addMessage(data.from, data.content, data.type|'received');
 	});
 
 	client.iosocket.on("contact", function(data) {
 		contact = JSON.parse(data);
 		console.log(contact);
-		if (phone.contacts.indexOf(contact) == -1) {
-			console.log('adding contact ' + contact);
-			phone.contacts.push(contact);
-			$("#contacts").append('<div class="contact" id="' + contact + '">' + contact + '</div>');
-		}
+		addContact(contact);
 	});
 
 
 	$("#conncection").on("click", function(data) {
 		client.iosocket.emit('update');
 	});
+
+	function addContact(contact) {
+		if (phone.contacts.indexOf(contact) == -1) {
+			console.log('adding contact ' + contact);
+			phone.contacts.push(contact);
+			$("#contacts").append('<div class="contact" id="' + contact + '">' + contact + '</div>');
+		}
+	}
 
 });
 
@@ -69,7 +74,9 @@ function update(which) {
 				if (phone.contacts.indexOf(contact) == -1) {
 					console.log('adding contact ' + contact);
 					phone.contacts.push(contact);
-					$("#contacts").append('<div class="contact" id="' + contact + '">' + contact + '</div>');
+					$("#contacts").append($('<div class="contact" id="' + contact + '">' + contact + '</div>').click(function (event) {
+						console.log("test");
+					}));
 				}
 			});
 		} else {
@@ -87,6 +94,10 @@ function time(t) {
 	(minutes?minutes + " minutes ":"") + (seconds?seconds + " seconds ":"");
 }
  
+function showConversation(who) {
+
+}
+
 function addMessage(from, content) {
 	console.log(from, content);
 	$("#messages").append('<div class="message">' + "from: " + from + "<br>said: " + content + "</div><hr>");

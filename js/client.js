@@ -1,7 +1,8 @@
 var app = {
-
+	currentContact:''
 }, phone = {
-
+	number: 5092218219,
+	conversations: {}
 }, client = {
 	connected: false
 };
@@ -35,10 +36,15 @@ $(document).ready(function() {
 	});
 
 	client.iosocket.on("message", function(data) {
+		console.log('received');
 		data = JSON.parse(data);
-		phone.conversations[data.from].push({type:data.type|'received', content: data.content});
+		data.type = data.type?data.type:'received';
+		console.log(data);
+
+		phone.conversations[data.from].messages.push({type: data.type, content: data.content});
 		addContact(data.from);
-		addMessage(data.from, data.content, data.type|'received');
+
+		addMessage(data.from, data.content, data.type);
 	});
 
 	client.iosocket.on("contact", function(data) {
@@ -47,20 +53,26 @@ $(document).ready(function() {
 		addContact(contact);
 	});
 
-
-	$("#conncection").on("click", function(data) {
+	$("#connection").on("click", function(data) {
 		client.iosocket.emit('update');
 	});
 
-	function addContact(contact) {
-		if (phone.contacts.indexOf(contact) == -1) {
-			console.log('adding contact ' + contact);
-			phone.contacts.push(contact);
-			$("#contacts").append('<div class="contact" id="' + contact + '">' + contact + '</div>');
-		}
-	}
 
 });
+
+function addContact(contact) {
+	if (phone.contacts.indexOf(contact) == -1) {
+		console.log('adding contact ' + contact);
+		
+		contact.element = $("<div/>", {id: contact, html: contact})
+		.addClass('contact').on('click', function (event) {
+			showConversation(contact);
+		}).appendTo("#contacts");
+
+		phone.contacts.push(contact);
+		phone.conversations[contact] = {messages: []};
+	}
+}
 
 function update(which) {
 	if (!which) {
@@ -70,14 +82,10 @@ function update(which) {
 		if (which == "uptime")
 			$("#uptime").text(phone.uptime?time(phone.uptime):"");
 		else if (which == "contacts") {
-			phone.contacts.forEach(function(i) {
-				if (phone.contacts.indexOf(contact) == -1) {
-					console.log('adding contact ' + contact);
-					phone.contacts.push(contact);
-					$("#contacts").append($('<div class="contact" id="' + contact + '">' + contact + '</div>').click(function (event) {
-						console.log("test");
-					}));
-				}
+			$('.contact').not('#head').remove();
+
+			phone.conversations.forEach(function (i) {
+				console.log(i);
 			});
 		} else {
 			$("#" + which).text(phone[which]);
@@ -95,11 +103,29 @@ function time(t) {
 }
  
 function showConversation(who) {
+	if (app.currentContact != '') {
+		return;
+	}
+	app.currentContact = who;
+	$('<h4/>', {id: who, html: who}).addClass('conversation').appendTo("#conversation");
+	$('<ul/>', {id: 'messages'}).appendTo("#conversation");
 
+	phone.conversations[who].messages.forEach(function (e) {
+		console.log(e);
+		($('<li/>').html(e.content).addClass('message')
+		.addClass(e.type)).appendTo('ul#messages');
+	});
+
+	$('<textarea class="conversation"></textarea>').appendTo("#conversation");
+	
 }
 
-function addMessage(from, content) {
+function addMessage(from, content, type) {
+	if (app.currentContact == '') {
+		return;
+	}
 	console.log(from, content);
-	$("#messages").append('<div class="message">' + "from: " + from + "<br>said: " + content + "</div><hr>");
+	$('<li/>').html(content).addClass('message')
+		.addClass(type).appendTo('ul#messages');
 }
 

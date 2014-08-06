@@ -2,7 +2,7 @@ var fs = require("fs"),
     http = require("http"),
     socketIO = require("socket.io"),
     hapi = require("hapi"),
-    port = +(process.argv[2]?process.argv[2]:4000), 
+    port = +(process.argv[2]?process.argv[2]:4000),
     port2 = port + 5;
 
 
@@ -23,8 +23,10 @@ hapiServer.route({ method: '*', path: '/{p*}', handler: function(req, reply) {
 
 
 hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply) {
-<<<<<<< HEAD
-	if (req.payload){
+    console.log('--');
+    console.log(req.payload);
+
+    if (req.payload){
         message = JSON.parse(req.payload);
         console.log("Messaged received from: ", message.from + " which says: " + message.content);
         if (phone.contacts.indexOf(message.from) == -1) {
@@ -32,25 +34,12 @@ hapiServer.route({ method: 'POST', path: '/POSTsms', handler:function(req, reply
             addContact(message.from);
         }
         phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
-=======
-	console.log('--');
-    console.log(req.payload);
-
-    if (req.payload){
-	    message = JSON.parse(req.payload);
-	    console.log("Messaged received from: ", message.from + " which says: " + message.content);
-	    if (phone.contacts.indexOf(message.from) == -1) {
-	        console.log("Contact " + message.from + " does not exist; adding.");
-	        addContact(message.from);
-	    }
-	    phone.conversations[message.from].messages.push({type: message.type|'received', content: message.content});
->>>>>>> 04ba4310bccc0fd500f07d2095f69965dcc991fa
-	
+    
         sendMessage(message);
         reply(1);
-	} else {
-		reply(0);
-	}
+    } else {
+        reply(0);
+    }
 }});
 
 hapiServer.route({ method: 'POST', path: '/battery', handler:function(req, reply) {
